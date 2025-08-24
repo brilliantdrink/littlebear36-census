@@ -64,7 +64,7 @@ const config = {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The HasanAbi Census</title>
+    <title>The littlebear36 Census</title>
     <script src="index.js" defer></script>
     <style>${css}</style>
 </head>
