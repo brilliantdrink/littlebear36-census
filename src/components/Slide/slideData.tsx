@@ -12,16 +12,10 @@ import locationFile from "../../data/location.csv"
 import originFile from "../../data/origin.csv"
 import salaryFile from "../../data/salary.csv"
 import educationFile from "../../data/education.csv"
-import sexHaversFile from "../../data/sex-havers.csv"
 import weebFile from "../../data/weeb.csv"
 import eatingFile from "../../data/eating.csv"
 import neurodivergenceFile from "../../data/neurodivergence.csv"
-import gamingFile from "../../data/gaming.csv"
-import watchedFile from "../../data/watched.csv"
-
-import styles from './slide.module.scss'
-
-const madge = 'https://cdn.betterttv.net/emote/6083d2f139b5010444d0540e/3x.webp'
+import languagesFile from "../../data/languages.csv"
 
 interface SlideData {
   name: string,
@@ -50,7 +44,6 @@ export const barChartSlides: SlideData[] = [{
 }, {
   name: 'Height',
   fileUrl: heightFile,
-  note: <>(Categories changed for 2023 <img src={madge} class={styles.inlineIcon} alt={''} /> )</>,
 }, {
   name: 'Trans Chatters',
   fileUrl: transFile,
@@ -67,9 +60,6 @@ export const barChartSlides: SlideData[] = [{
   name: 'Education',
   fileUrl: educationFile,
 }, {
-  name: 'VCARD',
-  fileUrl: sexHaversFile,
-}, {
   name: 'Weebs',
   fileUrl: weebFile,
 }, {
@@ -79,9 +69,6 @@ export const barChartSlides: SlideData[] = [{
   name: 'Neurodiversity',
   fileUrl: neurodivergenceFile,
 }, {
-  name: 'Gayming Frogs',
-  fileUrl: gamingFile,
-}, {
-  name: 'Years Watched',
-  fileUrl: watchedFile,
+  name: 'Languages',
+  fileUrl: languagesFile,
 }]
