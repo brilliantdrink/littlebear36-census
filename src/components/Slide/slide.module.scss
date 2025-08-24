@@ -9,7 +9,8 @@
   justify-content: center;
   align-items: center;
 
-  font-size: 18px;
+  font-size: 20px;
+  //background: url("../../images/sheet.webp") content-box center / contain no-repeat;
 
   > * {
     margin: 0;
@@ -20,15 +21,24 @@
   }
 
   h1, h2, h3 {
-    font-family: 'Archivo', sans-serif;
+    //font-family: 'Archivo', sans-serif;
   }
 
   h1 {
     margin-top: 2rem;
-    font-size: 5rem;
-    color: transparent;
+    font-size: 4rem;
+    font-family: 'Caprasimo', serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #efa92b;
+    $outline-color: #755900;
+    $outline-width: 2px;
+    text-shadow: -#{$outline-width} -#{$outline-width} 0 $outline-color, #{$outline-width} -#{$outline-width} 0 $outline-color,
+    -#{$outline-width} #{$outline-width} 0 $outline-color, #{$outline-width} #{$outline-width} 0 $outline-color;
 
-    background: url('../../images/title.svg') center / contain no-repeat;
+    .accent {
+      color: #d73a1a;
+    }
   }
 
   .signature {

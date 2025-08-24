@@ -2,8 +2,8 @@ import {ChartOptions, Plugin} from 'chart.js'
 import {originalDatasets} from './utils'
 
 const font = {
-  family: 'Fraunces',
-  size: 15,
+  family: 'Patrick Hand',
+  size: 16,
 }
 
 export const common = (id: string): ChartOptions => ({

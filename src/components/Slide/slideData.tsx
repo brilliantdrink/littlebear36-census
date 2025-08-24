@@ -9,6 +9,7 @@ import sexualityFile from "../../data/sexuality.csv"
 import heightFile from "../../data/height.csv"
 import transFile from "../../data/trans.csv"
 import locationFile from "../../data/location.csv"
+import originFile from "../../data/origin.csv"
 import salaryFile from "../../data/salary.csv"
 import educationFile from "../../data/education.csv"
 import sexHaversFile from "../../data/sex-havers.csv"
@@ -56,6 +57,9 @@ export const barChartSlides: SlideData[] = [{
 }, {
   name: 'Location',
   fileUrl: locationFile,
+}, {
+  name: 'Origin',
+  fileUrl: originFile,
 }, {
   name: 'Salary',
   fileUrl: salaryFile,
