@@ -14,6 +14,10 @@
     flex: 0 0 100%;
     min-width: 0;
 
+    background: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 1000 1000\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E') 100% repeat,
+    linear-gradient(0deg, #050505, #080808);
+    background-blend-mode: color-dodge;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -23,7 +27,7 @@
   .arrow {
     $size: 4rem;
     position: absolute;
-    top: calc(50% - #{$size} / 2);
+    bottom: calc((118px - #{$size}) / 2);
 
     height: $size;
     width: $size;
@@ -48,9 +52,11 @@
 
     $hover-scale: scale(1.1);
     $margin: 2rem;
+    $margin-md: 0rem;
 
     transition: transform .2s ease;
     cursor: pointer;
+    z-index: 1;
 
     &.hide {
       display: none;
@@ -62,53 +68,116 @@
 
     &.next {
       right: $margin;
-      //$transform: rotate(-60deg);
-      //transform: $transform;
-
-      /*&:hover {
-        transform: $transform $hover-scale;
-      }*/
     }
 
     &.prev {
       left: $margin;
-      //$transform: rotateZ(60deg) rotateY(180deg);
-      //transform: $transform;
+    }
 
-      /*&:hover {
-        transform: $transform $hover-scale;
-      }*/
+    @media screen and (max-width: 1200px) {
+      &.next {
+        right: $margin-md;
+      }
+
+      &.prev {
+        left: $margin-md;
+      }
     }
   }
 
-  .nav {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  @media screen and (max-width: 700px) {
+    .arrow {
+      display: none;
+    }
+  }
+}
 
-    padding: 1rem 10%;
-    box-sizing: border-box;
-    background-color: inherit;
-    //font-family: 'Archivo', sans-serif;
+.nav {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+  padding: 1rem 10%;
+  box-sizing: border-box;
+  background-color: transparent;
+  //font-family: 'Archivo', sans-serif;
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  &.sliding {
+    height: 12rem;
+    padding: .5rem 10%;
+
+    background: transparentize(#111, .5);
+    backdrop-filter: blur(10px);
+
+    overflow: hidden;
+    display: block;
+
+    transition: .3s ease;
+    transition-property: transform, background, backdrop-filter;
+
+    &.collapsed {
+      transform: translateY(#{(12rem * 0.5) - (3rem * 0.5)});
+      background: transparentize(#111, 1);
+      backdrop-filter: blur(0px);
+
+      .item:not(.selected) {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+
+      .item.selected {
+        opacity: 1;
+
+        &:after {
+          content: none;
+        }
+      }
+    }
+
+    .container {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      flex-wrap: nowrap;
+      gap: 0;
+    }
 
     .item {
-      position: relative;
-      cursor: pointer;
+      padding: .5rem;
+      height: 3rem;
+      box-sizing: border-box;
+      text-align: center;
+      --scale: 1;
+      transform: rotate(0.001deg) scale(1);
+      will-change: transform;
+      transition: opacity .1s ease;
+    }
+  }
 
-      &.selected:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: transparentize(#ff1f50, .5);
-      }
+  .item {
+    position: relative;
+    cursor: pointer;
+
+    &.selected:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: transparentize(#1fff5e, .5);
+    }
+
+    .selectIcon {
+      margin-left: .2rem;
+      font-size: .8em;
     }
   }
 }

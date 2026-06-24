@@ -1,5 +1,4 @@
-import '@fontsource/caprasimo'
-import '@fontsource/patrick-hand'
+import '@fontsource/karla'
 import './style.scss'
 import Slider from './components/Slider'
 
