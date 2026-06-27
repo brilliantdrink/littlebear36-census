@@ -22,12 +22,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    --bottom: 84px;
   }
 
   .arrow {
     $size: 4rem;
     position: absolute;
-    bottom: calc((118px - #{$size}) / 2);
+    --bottom: 84px;
+    bottom: var(--bottom);
 
     height: $size;
     width: $size;
@@ -39,22 +42,19 @@
     color: currentColor;
 
     border-radius: 50%;
-    //background-repeat: no-repeat;
-    //background-image: url('../../images/arrow.svg');
-    //background-size: $size * .9;
-    //background-position: center;
-
-    //font-size: 0;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    $hover-scale: scale(1.1);
+    --scale: scale(1);
+    --translate: translate(0);
     $margin: 2rem;
     $margin-md: 0rem;
 
-    transition: transform .2s ease;
+    transform: var(--translate) var(--scale) rotate(0.001deg);
+    will-change: transform;
+    transition: transform .4s ease;
     cursor: pointer;
     z-index: 1;
 
@@ -63,25 +63,19 @@
     }
 
     &:hover {
-      transform: $hover-scale;
+      --scale: scale(1.1);
     }
 
     &.next {
-      right: $margin;
+      right: calc(50% - #{$size} - #{$margin-md});
+    }
+
+    &.center {
+      --translate: translate(calc(-#{$margin-md} - #{$size} / 2), -10vh);
     }
 
     &.prev {
-      left: $margin;
-    }
-
-    @media screen and (max-width: 1200px) {
-      &.next {
-        right: $margin-md;
-      }
-
-      &.prev {
-        left: $margin-md;
-      }
+      left: calc(50% - #{$size} - #{$margin-md});
     }
   }
 

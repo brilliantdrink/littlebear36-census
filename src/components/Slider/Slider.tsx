@@ -1,7 +1,7 @@
-import {createSignal, onMount, Show} from 'solid-js'
+import {createEffect, createSignal, onMount, Show} from 'solid-js'
 import createEmblaCarousel from 'embla-carousel-solid'
 import {default as cn} from 'classnames'
-import {BsChevronCompactLeft, BsChevronCompactRight} from 'solid-icons/bs'
+import {HiOutlineArrowLongLeft, HiOutlineArrowLongRight} from 'solid-icons/hi'
 import {FaSolidCaretDown} from 'solid-icons/fa'
 import {createMediaQuery} from '@solid-primitives/media'
 import {HomeSlide} from '../Slide'
@@ -37,7 +37,17 @@ export default function Slider() {
         navEmblaApi()?.scrollTo(emblaApi()?.selectedScrollSnap() ?? 0)
       })
     }
+    const isolateArrowButtonEvent = (e: Event) => {
+      if (!(e.target instanceof Element)) return
+      if (!e.target.closest('button')?.classList.contains(styles.arrow)) return
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    window.addEventListener('mousedown', isolateArrowButtonEvent)
+    window.addEventListener('pointerdown', isolateArrowButtonEvent)
+    window.addEventListener('touchstart', isolateArrowButtonEvent)
   })
+
 
   const isSmall = createMediaQuery("(max-width: 900px)")
   const [navExpanded, setNavExpanded] = createSignal(false)
@@ -88,6 +98,20 @@ export default function Slider() {
     }
   })
 
+  const [footerHeight, setFooterHeight] = createSignal(0)
+
+  onMount(() => {
+    const updateFooterHeight = () => {
+      if (isSmall()) {
+        setFooterHeight(44)
+      } else {
+        setFooterHeight(document.querySelector(`.${styles.nav}`)?.getBoundingClientRect().height ?? 0)
+      }
+    }
+    updateFooterHeight()
+    window.addEventListener('resize', updateFooterHeight, {passive: true})
+  })
+
   const allSlides = [{name: 'Cover'}, ...barChartSlides]
 
   return <>
@@ -95,18 +119,20 @@ export default function Slider() {
       <div class={styles.container}>
         <div class={styles.slide}><HomeSlide /></div>
         {barChartSlides.map(({name, fileUrl, asyncPollFileUrl, note}, index) => (
-          <div class={styles.slide}>
+          <div class={styles.slide} style={{'--bottom': footerHeight() + 'px'}}>
             <BarChartSlide dataFile={fileUrl} asyncPollDataFile={asyncPollFileUrl} title={name} note={note} />
           </div>
         ))}
       </div>
-      <button class={cn(styles.arrow, styles.next, !canScrollNext() && styles.hide)}
+      <button class={cn(styles.arrow, styles.next, !canScrollPrev() && styles.center, !canScrollNext() && styles.hide)}
+              style={{'--bottom': footerHeight() + 'px'}}
               onclick={() => emblaApi()?.scrollNext()}>
-        <BsChevronCompactRight />
+        <HiOutlineArrowLongRight />
       </button>
       <button class={cn(styles.arrow, styles.prev, !canScrollPrev() && styles.hide)}
+              style={{'--bottom': footerHeight() + 'px'}}
               onclick={() => emblaApi()?.scrollPrev()}>
-        <BsChevronCompactLeft />
+        <HiOutlineArrowLongLeft />
       </button>
     </div>
     <Show when={!isSmall()}>

@@ -1,11 +1,10 @@
 import {parse} from 'csv-parse/browser/esm/sync'
-import {ChartData} from 'chart.js'
+import {ChartData, ChartDataset, ChartType} from 'chart.js'
 import {color} from './colors'
 import {normalizeChartDataY} from './utils'
-import cloneDeep from 'lodash.clonedeep'
 
 export default async function getStackedBarData(url: string | undefined, asyncPollUrl: string | undefined, id: string) {
-  const datasets = []
+  const datasets: ChartDataset[] = []
   const labels = new Set<string>()
 
   if (url) {
@@ -15,10 +14,12 @@ export default async function getStackedBarData(url: string | undefined, asyncPo
     datasets.push(...normalizeChartDataY(res.map((groupData, index, arr) => {
       const label = '[Synchronous] ' + groupData.shift()
       return {
+        type: 'bar',
         label,
         data: groupData.map(Number),
         backgroundColor: color(index, arr.length),
-        stack: 'Synchronous Poll'
+        stack: 'Synchronous Poll',
+        intraStackIndex: index,
       }
     }), id))
   }
@@ -35,10 +36,12 @@ export default async function getStackedBarData(url: string | undefined, asyncPo
     datasets.push(...normalizeChartDataY(res.map((groupData, index, arr) => {
       const label = '[Asynchronous] ' + groupData.shift()
       return {
+        type: 'bar',
         label,
         data: groupData.map(Number),
         backgroundColor: color(index, arr.length),
-        stack: 'Asynchronous Poll'
+        stack: 'Asynchronous Poll',
+        intraStackIndex: index,
       }
     }), id, surveyees))
   }

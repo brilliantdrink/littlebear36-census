@@ -1,0 +1,100 @@
+@use 'sass:math';
+
+$width: 180px;
+$stroke: 2px;
+$dot-size: 10px;
+$blurred: 4px;
+$scaled: 1.4;
+
+$unblur-duration: .5s;
+$move-duration: 1.4s;
+$blur-duration: .3s;
+$pause-duration: 2.4s;
+$total-duration: $move-duration + $pause-duration;
+
+.hint {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+
+  @media screen and (min-width: 700px) {
+    display: none;
+  }
+
+  .line {
+    height: $stroke;
+    width: $width;
+    background: transparentize(white, 0.9);
+  }
+
+  .dot {
+    position: absolute;
+    top: calc(-#{$dot-size} / 2 + #{$stroke} / 2);
+    left: 0;
+
+    height: $dot-size;
+    width: $dot-size;
+    border-radius: $dot-size;
+    backdrop-filter: blur(7px);
+    --translate: 0;
+    --scale: 1;
+    transform: var(--translate) var(--scale);
+
+    animation: swipe-hint $total-duration cubic-bezier(.6, .1, .4, .9) infinite;
+    background: transparentize(white, 0.7);
+  }
+
+  .text {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .5ch;
+    opacity: .4;
+  }
+
+  @keyframes swipe-hint {
+    0% {
+      opacity: 0;
+      filter: blur($blurred);
+      scale: #{$scaled};
+
+      translate: calc(#{$width} - #{$dot-size});
+    }
+
+    #{math.div($unblur-duration * 0.5, $total-duration) * 100%} {
+      translate: calc(#{$width} - #{$dot-size});
+    }
+
+    #{math.div($unblur-duration, $total-duration) * 100%} {
+      opacity: 1;
+      filter: blur(0);
+      scale: 1;
+    }
+
+    #{math.div($move-duration - $blur-duration, $total-duration) * 100%} {
+      opacity: 1;
+      filter: blur(0);
+      scale: 1;
+    }
+
+    #{math.div($move-duration - $blur-duration * 0.5, $total-duration) * 100%} {
+      translate: 0;
+    }
+
+    #{math.div($move-duration, $total-duration) * 100%} {
+      opacity: 0;
+      filter: blur($blurred);
+      scale: #{$scaled};
+    }
+
+    100% {
+      opacity: 0;
+      filter: blur($blurred);
+      scale: #{$scaled};
+
+      translate: 0;
+    }
+  }
+}

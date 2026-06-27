@@ -15,8 +15,4 @@ export function color(i: number, of: number) {
   return Color.lch(65, 90, chromaStep * i + -120).hex()
 }
 
-/*export const colors = [
-  '#457B9D','#2A9D8F','#4d9c4b',
-  '#97cb40', '#efbe47', '#f19751',
-  '#E76F51'
-]*/
+export const trans = ['#5bcefa', '#f5a9b8', '#fff']

@@ -9,12 +9,17 @@ const font = {
 
 export const common = (id: string, tiny: boolean): ChartOptions => ({
   responsive: true,
-  // maintainAspectRatio: false,
+  maintainAspectRatio: false,
   layout: {
     padding: {
-      top: -12
+      left: 12,
+      right: 32,
+      top: -12,
+      bottom: 0,
     },
   },
+  // when animations are enabled, the line annotation often is rendered in the wrong place
+  animation: false,
   plugins: {
     // legend: {labels: {font}},
     legend: {
@@ -38,32 +43,72 @@ export const common = (id: string, tiny: boolean): ChartOptions => ({
       footerFont: font,
     },
     datalabels: {
-      anchor: 'center',
-      align: 'center',
-      textAlign: 'center',
-      color: 'black',
-      font,
-      formatter: (value, context) => {
-        const data = originalDatasets[id][context.dataset.label as string]
-          ?? originalDatasets[id + '-async_poll'][context.dataset.label as string]
-        const totalAmount = data.data[context.dataIndex]
-        let label = (context.dataset.label as string).replace(/\[\w+] /, '')
-        const maxCharacters = 22
-        if (label.length > maxCharacters) {
-          label = label.substring(0, maxCharacters - 2) + '…'
+      labels: {
+        sets: {
+          anchor: 'center',
+          align: 'center',
+          textAlign: 'center',
+          color: 'black',
+          font,
+          formatter: (value, context) => {
+            const data = originalDatasets[id][context.dataset.label as string]
+              ?? originalDatasets[id + '-async_poll'][context.dataset.label as string]
+            const totalAmount = data.data[context.dataIndex]
+            let label = (context.dataset.label as string).replace(/\[\w+] /, '')
+            const maxCharacters = 22
+            if (label.length > maxCharacters) {
+              label = label.substring(0, maxCharacters - 2) + '…'
+            }
+            const roundedPercentageValue = tiny
+              ? Math.round(Number(value) * 100)
+              : Math.round(Number(value) * 100 * 100) / 100
+            const percentage = roundedPercentageValue + '%'
+            if (!value || value < .015) return ''
+            else if (tiny || value < .05) return percentage
+            else if (value < .05) return percentage
+            else if (value < .10) return label + '\n' + percentage
+            else return label + '\n' + percentage + '\n' + totalAmount
+          }
+        },
+        stacks: {
+          align: 'bottom',
+          anchor: 'start',
+          font,
+          formatter: (value, context) => {
+            // @ts-ignore
+            if (context.dataset.intraStackIndex !== 0) return ''
+            else {
+              if (tiny) {
+                if (context.dataset.stack?.toLowerCase().startsWith('async')) return 'Async Poll'
+                if (context.dataset.stack?.toLowerCase().startsWith('sync')) return 'Sync Poll'
+                return context.dataset.stack
+              } else {
+                return context.dataset.stack
+              }
+            }
+          }
+        },
+      },
+    },
+    annotation: {
+      annotations: [{
+        type: 'line',
+        yMin: 1,
+        yMax: 1,
+        borderColor: 'rgba(255, 255, 255, .2)',
+        borderWidth: 2,
+        label: {
+          display: true,
+          position: '0%',
+          content: '100%',
+          color: 'rgba(255, 255, 255, .4)',
+          backgroundColor: 'rgba(0, 0, 0, .6)',
+          borderRadius: 0,
+          padding: 3,
         }
-        const roundedPercentageValue = tiny
-          ? Math.round(Number(value) * 100)
-          : Math.round(Number(value) * 100 * 100) / 100
-        const percentage = roundedPercentageValue + '%'
-        if (!value || value < .015) return ''
-        else if (tiny || value < .05) return percentage
-        else if (value < .05) return percentage
-        else if (value < .10) return label + '\n' + percentage
-        else return label + '\n' + percentage + '\n' + totalAmount
-      }
+      }]
     }
-  }
+  },
 })
 
 export const stackedBarChart = (id: string, tiny: boolean = false): ChartOptions => ({
@@ -80,9 +125,10 @@ export const stackedBarChart = (id: string, tiny: boolean = false): ChartOptions
             return this.getLabelForValue(value)
           }
         },
-        minRotation: tiny ? 90 : 0,
-        maxRotation: 90,
-        font
+        // minRotation: tiny ? 90 : 0,
+        // maxRotation: 90,
+        font,
+        padding: 24,
       }
     },
     y: {
@@ -126,13 +172,13 @@ const htmlLegendPlugin: Plugin = {
       li.style.alignItems = 'center'
       li.style.marginBottom = '5px'
 
-      li.onclick = () => {
+      /*li.onclick = () => {
         chart.setDatasetVisibility(item.datasetIndex as number, !chart.isDatasetVisible(item.datasetIndex as number))
         chart.update()
-      };
+      };*/
 
       li.innerHTML = `
-        <span style="background-color:${item.fillStyle}; width:18px; height:12px; margin-right:8px;"></span>
+        <span style="background-color:${item.fillStyle};"></span>
         ${item.text.replace(/\[\w+] /, '')}
       `
 
